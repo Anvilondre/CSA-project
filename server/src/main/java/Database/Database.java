@@ -1,8 +1,12 @@
 package Database;
 
+import Models.Category;
+import Models.Product;
 import Models.User;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
     private Connection con;
@@ -17,9 +21,9 @@ public class Database {
 
             pst = con.prepareStatement(
                     "create table if not exists 'category' (" +
-                    "'id' INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "'name' text UNIQUE ," +
-                    "'description' text);"
+                            "'id' INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "'name' text UNIQUE ," +
+                            "'description' text);"
             );
             pst.executeUpdate();
 
@@ -53,9 +57,165 @@ public class Database {
         }
     }
 
-// User
-    public User insertUser(User user){
+    // Category
+    public boolean isCategoryPresent(String name) {
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM category where name = '" + name + "'");
+            if (res.next()) {
+                return true;
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can`t find category", e);
+        }
+        return false;
+    }
+
+    public Category insertCategory(Category category) {
+        try {
+            PreparedStatement statement = con.prepareStatement("INSERT INTO category(name, description) VALUES (?, ?)");
+
+            statement.setString(1, category.getName());
+            statement.setString(2, category.getDescription());
+            statement.executeUpdate();
+
+            ResultSet resSet = statement.getGeneratedKeys();
+            category.setId(resSet.getInt("last_insert_rowid()"));
+            statement.close();
+            return category;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problem with insert category", e);
+        }
+    }
+
+    public List<Category> getAllCategories() {
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM category");
+            List<Category> categories = new ArrayList<>();
+            while (res.next()) {
+                categories.add(getCategoryFromResultSet(res));
+            }
+            res.close();
+            return categories;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problems with SQL query for select categorys", e);
+        }
+    }
+
+    private static Category getCategoryFromResultSet(ResultSet res) throws SQLException {
+        return new Category(res.getInt("id"),
+                res.getString("name"),
+                res.getString("description"));
+    }
+
+    public void deleteCategory(String name) {
+        try {
+            Statement st = con.createStatement();
+            st.executeUpdate("DELETE FROM category WHERE name = '" + name + "';");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problem with DELETE from category", e);
+        }
+    }
+
+    // Product
+    public boolean isProductPresent(String name) {
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM categories where name = '" + name + "'");
+            if (res.next()) {
+                return true;
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can`t find product", e);
+        }
+        return false;
+    }
+
+    public Product insertProduct(Product product) {
+        try {
+            PreparedStatement statement = con.prepareStatement("INSERT INTO product(name, description, producer, price, amount, category_id) VALUES (?, ?, ?, ?, ?, ?)");
+
+            statement.setString(1, product.getName());
+            statement.setString(2, product.getDescription());
+            statement.setString(3, product.getProducer());
+            statement.setDouble(4, product.getPrice());
+            statement.setDouble(5, product.getAmount());
+            statement.setInt(6, product.getCategory_id());
+            statement.executeUpdate();
+
+            ResultSet resSet = statement.getGeneratedKeys();
+            product.setId(resSet.getInt("last_insert_rowid()"));
+            statement.close();
+            return product;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problem with insert product", e);
+        }
+    }
+
+    public List<Product> getAllProducts() {
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM product");
+            List<Product> products = new ArrayList<>();
+            while (res.next()) {
+                products.add(getProductFromResultSet(res));
+            }
+            res.close();
+            return products;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problems with SQL query for select products", e);
+        }
+    }
+
+    private static Product getProductFromResultSet(ResultSet res) throws SQLException {
+        return new Product(res.getInt("id"),
+                res.getString("name"),
+                res.getString("description"),
+                res.getString("producer"),
+                res.getDouble("price"),
+                res.getDouble("amount"),
+                res.getInt("category_id"));
+    }
+
+    public void updateProduct(Product product){
         try{
+            Statement st = con.createStatement();
+            st.executeUpdate("UPDATE product" +
+                    " SET name = '" + product.getName() + "', " +
+                    "description = '" + product.getDescription() +"', " +
+                    "producer ='" + product.getProducer() + "', " +
+                    "price = " + product.getPrice() + "," +
+                    "amount = " + product.getAmount() + "," +
+                    "category_id = " + product.getCategory_id() + " " +
+                    "WHERE id = " +
+                    "");
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("Problem with UPDATE product", e);
+        }
+    }
+
+    public void deleteProduct(String name) {
+        try {
+            Statement st = con.createStatement();
+            st.executeUpdate("DELETE FROM product WHERE name = '" + name + "';");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problem with DELETE from product", e);
+        }
+    }
+
+    // User
+    public User insertUser(User user) {
+        try {
             PreparedStatement statement = con.prepareStatement("INSERT INTO users(login, password) VALUES (?, ?)");
 
             statement.setString(1, user.getLogin());
@@ -66,19 +226,19 @@ public class Database {
             user.setId(resSet.getInt("last_insert_rowid()"));
             statement.close();
             return user;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Problem with insert user", e);
         }
     }
 
-    public User getUserByLogin(String login){
-        try{
+    public User getUserByLogin(String login) {
+        try {
             Statement st = con.createStatement();
             ResultSet res = st.executeQuery("SELECT * FROM users where login = '" + login + "'");
-            if(res.next())
+            if (res.next())
                 return new User(res.getInt("id"), res.getString("login"), res.getString("password"));
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException("Can`t get user", e);
         }
         return null;
@@ -104,10 +264,4 @@ public class Database {
             throw new RuntimeException("Problem with DELETE from product", e);
         }
     }
-
-
-
-
-
-
 }
