@@ -11,22 +11,17 @@ import java.io.IOException;
 
 public class App extends Application {
 
-    private static Scene scene;
     private static Stage stage;
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("authorization"));
-        this.stage = stage;
-        stage.setScene(scene);
+        App.stage = stage;
+        stage.setScene(new Scene(loadFXML("authorization")));
         stage.setResizable(false);
         stage.show();
     }
 
-    static void goToWarehouse(String login, String password) throws IOException {
-        System.out.println(login + " " + password);
-        stage.setResizable(true);
-        scene.setRoot(loadFXML("warehouse"));
+    static void goToWarehouse() throws IOException {
         stage.setScene(new Scene(loadFXML("warehouse")));
     }
 

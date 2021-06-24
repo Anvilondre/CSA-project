@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="413.0" prefWidth="361.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.AuthorizationController">
+<AnchorPane prefHeight="413.0" prefWidth="361.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.AuthorizationController">
    <children>
       <Button alignment="CENTER" layoutX="127.0" layoutY="316.0" mnemonicParsing="false" onAction="#login" prefHeight="42.0" prefWidth="91.0" text="Log in" />
       <TextField fx:id="loginTextField" layoutX="93.0" layoutY="166.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
@@ -16,6 +16,11 @@
       <Label layoutX="61.0" layoutY="71.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Welcome to the warehouse!">
          <font>
             <Font name="Apple Braille" size="19.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="112.0" layoutY="371.0" text="Incorrect credentials!" textFill="#fa3131" underline="true" visible="false">
+         <font>
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
    </children>
