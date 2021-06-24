@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="412.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Accordion layoutX="105.0" layoutY="76.0" />
+      <Button layoutX="169.0" layoutY="437.0" mnemonicParsing="false" text="Add group" />
+    <TitledPane animated="false" layoutX="182.0" layoutY="133.0" text="Group1">
+         <content>
+            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+              </content>
+            </ScrollPane>
+         </content>
+    </TitledPane>
+      <Text layoutX="41.0" layoutY="259.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Some statistics" />
+      <TextField layoutX="14.0" layoutY="145.0" />
+      <Label layoutX="74.0" layoutY="125.0" text="Search" />
+   </children>
+</AnchorPane>
