@@ -25,14 +25,19 @@ public class MyServer {
     private static final Key SIGNING_KEY = new SecretKeySpec(API_KEY_SECRET_BYTES, SIGNATURE_ALGORITHM.getJcaName());
     private static final String API_GOOD_PATH = "/api/good";
 
+    private static final User[] users = {
+            new User("login", "password"),
+            new User("", "")
+    };
+
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(6060), 0);
         Database db = new Database();
         db.initDatabase("warehouse");
 
-        db.insertUser(new User("login", "password"));
-
+        for (User user : users)
+            db.insertUser(user);
 
         server.start();
         ObjectMapper objectMapper = new ObjectMapper();
