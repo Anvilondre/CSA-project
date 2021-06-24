@@ -1,12 +1,30 @@
 package Models;
 
-public class Categories {
+public class Category {
+    private Integer id;
     private String name;
     private String description;
 
-    public Categories(String name, String description) {
+    public Category(Integer id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public Category(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public Category() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -25,12 +43,11 @@ public class Categories {
         this.description = description;
     }
 
-
-
     @Override
     public String toString() {
-        return "Categories{" +
-                "name='" + name + '\'' +
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

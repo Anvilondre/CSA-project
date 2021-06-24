@@ -1,28 +1,39 @@
 package Models;
 
-public class Products {
+public class Product {
+    private Integer id;
     private String name;
     private String description;
     private String producer;
     private Double amount;
     private Double price;
-    private String category;
+    private Integer category_id;
 
-    public Products(String name, String description, String producer, Double amount, Double price, String category) {
+    public Product(Integer id, String name, String description, String producer, Double amount, Double price, Integer category_id) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.producer = producer;
         this.amount = amount;
         this.price = price;
-        this.category = category;
+        this.category_id = category_id;
     }
 
-    public Products(String name, String description, String producer, Double amount, Double price) {
+    public Product(String name, String description, String producer, Double amount, Double price, Integer category_id) {
         this.name = name;
         this.description = description;
         this.producer = producer;
         this.amount = amount;
         this.price = price;
+        this.category_id = category_id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -65,12 +76,24 @@ public class Products {
         this.price = price;
     }
 
-    public String getCategory() {
-        return category;
+    public Integer getCategory_id() {
+        return category_id;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory_id(Integer category_id) {
+        this.category_id = category_id;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", producer='" + producer + '\'' +
+                ", amount=" + amount +
+                ", price=" + price +
+                ", category_id=" + category_id +
+                '}';
+    }
 }
