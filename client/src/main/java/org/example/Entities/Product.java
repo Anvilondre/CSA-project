@@ -28,6 +28,9 @@ public class Product {
         this.category_id = category_id;
     }
 
+    public Product() {
+    }
+
     public Integer getId() {
         return id;
     }

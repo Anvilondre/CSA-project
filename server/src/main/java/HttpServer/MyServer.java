@@ -123,8 +123,30 @@ public class MyServer {
             }
         );
 
+        server.createContext("/api/goodsbycategory/", exchange -> {
+            int categoryId = getURIId(exchange.getRequestURI().getPath());
+            if(categoryId < 1){
+                exchange.sendResponseHeaders(404, 0);
+                exchange.close();
+                return;
+            } else if(!(db.isCategoryPresent(categoryId))){
+                exchange.sendResponseHeaders(404, 0);
+                exchange.close();
+                return;
+            } else if(exchange.getRequestMethod().equals("GET")){
+                        List<Product> products = db.getProductsByCategoryId(categoryId);
+                        byte[] response = objectMapper.writeValueAsBytes(products);
+                        exchange.getResponseHeaders().set("Content-Type", "application/json");
+                        exchange.sendResponseHeaders(200, response.length);
+                        exchange.getResponseBody().write(response);
+                    }else exchange.sendResponseHeaders(405, 0);
+                    exchange.close();
+                }
+        );
+
         server.createContext("/api/categories", exchange -> {
-                    if(exchange.getRequestMethod().equals("GET")){
+
+            if(exchange.getRequestMethod().equals("GET")){
                         List<Category> categories = db.getAllCategories();
                         byte[] response = objectMapper.writeValueAsBytes(categories);
                         exchange.getResponseHeaders().set("Content-Type", "application/json");

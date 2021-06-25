@@ -216,6 +216,22 @@ public class Database {
         }
     }
 
+    public List<Product> getProductsByCategoryId(int categoryId) {
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM product WHERE category_id = " + categoryId + ";");
+            List<Product> products = new ArrayList<>();
+            while (res.next()) {
+                products.add(getProductFromResultSet(res));
+            }
+            res.close();
+            return products;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problems with SQL query for select products", e);
+        }
+    }
+
     private static Product getProductFromResultSet(ResultSet res) throws SQLException {
         return new Product(res.getInt("id"),
                 res.getString("name"),
