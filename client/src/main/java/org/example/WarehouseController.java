@@ -53,7 +53,7 @@ public class WarehouseController {
 
     private static VBox groupsUnitsVBox;
 
-    private ArrayList<CategoryPane> categoryPanes = new ArrayList<>();
+    private static ArrayList<CategoryPane> categoryPanes = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -73,6 +73,7 @@ public class WarehouseController {
                 }
                 CategoryPane categoryPane = new CategoryPane(category, productLabels);
                 groupsUnitsVBox.getChildren().add(categoryPane);
+                categoryPanes.add(categoryPane);
             }
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
@@ -81,6 +82,20 @@ public class WarehouseController {
         }
 
     };
+
+    @FXML
+    public void updateGeneralInfo() {
+        Double totalPrice = 0d;
+        int totalAmount = 0;
+
+        for (CategoryPane categoryPane : categoryPanes) {
+            totalPrice += categoryPane.getTotalCost();
+            totalAmount += categoryPane.getTotalAmount();
+        }
+
+        generalStatisticsText.setText(String.format("Total amount of items: %dpcs\nTotal cost of items: %.2f$",
+                totalAmount, totalPrice));
+    }
 
     @FXML
     private void searchUnitByName() {
