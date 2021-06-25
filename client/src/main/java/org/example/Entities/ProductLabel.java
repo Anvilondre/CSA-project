@@ -1,5 +1,8 @@
 package org.example.Entities;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 
@@ -8,6 +11,11 @@ public class ProductLabel extends Button {
 
     public ProductLabel(Product product) {
         super();
+        this.setOnAction(new EventHandler<>() {
+            @Override public void handle(ActionEvent e) {
+                ProductLabel.this.setStyle("-fx-background-color: #ffffff");
+            }
+        });
         this.product = product;
         this.update();
     }
@@ -17,21 +25,27 @@ public class ProductLabel extends Button {
         this.update();
     }
 
+
     public Product getProduct() {
         return product;
     }
 
-    private void update() {
+    public void addAmount(Double amount) {
+        this.product.setAmount(this.product.getAmount() + amount);
+        this.update();
+    }
+
+    protected void update() {
         this.updateText();
         this.updateDescriptionTip();
     }
 
     private void updateDescriptionTip() {
         this.setTooltip(new Tooltip("Description: " + product.getDescription() +
-                                     "\nProducer" + getProduct().getProducer()));
+                                     "\nProducer: " + product.getProducer()));
     }
 
     private void updateText() {
-        this.setText(product.getName() + '[' + product.getAmount() + "pcs, " + product.getPrice() + "$]");
+        this.setText(product.getName() + " [" + product.getAmount() + "pcs, " + product.getPrice() + "$]");
     }
 }
