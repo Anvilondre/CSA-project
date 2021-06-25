@@ -10,6 +10,8 @@ import org.example.WarehouseController;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.example.RequestsManagers.DeleteRequests.deleteCategory;
+import static org.example.RequestsManagers.DeleteRequests.deleteProduct;
 import static org.example.RequestsManagers.UpdateRequests.updateCategoryRequest;
 import static org.example.RequestsManagers.UpdateRequests.updateProductRequest;
 import static org.example.RequestsManagers.putRequests.putCategoryRequest;
@@ -100,6 +102,10 @@ public class CategoryPane extends TitledPane {
     private void removeCategory() {
 
         // TODO: Database callback
+        int code = deleteCategory(this.category);
+        if(code != 204){
+            System.out.println("Error");
+        }
         WarehouseController.removeCategoryPane(this);
     }
 
@@ -212,6 +218,13 @@ public class CategoryPane extends TitledPane {
                 this.addAmount(result);
                 this.update();
                 CategoryPane.this.update();
+
+                int code = updateProductRequest(this.getProduct());
+                if(!(code == 204)){
+                    System.out.println("Error");
+                }
+                this.update();
+                CategoryPane.this.update();
             });
         }
 
@@ -221,6 +234,13 @@ public class CategoryPane extends TitledPane {
             results.ifPresent((Double result) -> {
                 // TODO: Database callback
                 this.addAmount(-result);
+                this.update();
+                CategoryPane.this.update();
+
+                int code = updateProductRequest(this.getProduct());
+                if(!(code == 204)){
+                    System.out.println("Error");
+                }
                 this.update();
                 CategoryPane.this.update();
             });
@@ -247,11 +267,13 @@ public class CategoryPane extends TitledPane {
 
         private void removeProduct() {
             // TODO: Database callback
-            System.out.println(productLabels.size());
-            System.out.println(getTotalCost());
+            int code = deleteProduct(this.getProduct());
+            if(code != 204){
+                System.out.println("Error");
+            }
+            this.getProduct();
             removeProductLabel(this);
-            System.out.println(getTotalCost());
-            System.out.println(productLabels.size());
+
         }
 
         private void addContextMenu() {
