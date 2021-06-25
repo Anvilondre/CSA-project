@@ -10,6 +10,7 @@ import org.example.WarehouseController;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.example.RequestsManagers.UpdateRequests.updateCategoryRequest;
 import static org.example.RequestsManagers.putRequests.putCategoryRequest;
 import static org.example.RequestsManagers.putRequests.putProductRequest;
 
@@ -71,6 +72,7 @@ public class CategoryPane extends TitledPane {
                 System.out.println("ERROR");
             }
         });
+
         // ProductLabel productLabel = new ProductLabel(product);
 
         // TODO: Database callback
@@ -82,7 +84,14 @@ public class CategoryPane extends TitledPane {
         Optional<Category> results = dialog.showAndWait();
         results.ifPresent((Category result) -> {
             // TODO: Database callback
-            this.setCategory(result);
+            int code = updateCategoryRequest(result);
+            if(code == 204){
+                this.setCategory(result);
+            } else{
+                // TODO: Error
+                System.out.println("Error");
+            }
+
             System.out.println("Got result!");
         });
     }

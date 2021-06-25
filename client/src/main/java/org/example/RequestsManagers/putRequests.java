@@ -58,19 +58,15 @@ public class putRequests {
         int id = 0;
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            if(!response.body().isEmpty()) {
+            if(response.statusCode() == 201) {
                 byte[] array = response.body().getBytes();
                 ByteBuffer wrapped = ByteBuffer.wrap(array); // big-endian by default
                 id = wrapped.getInt();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
         return new int[]{response.statusCode(), id};
     }
-
-
 }

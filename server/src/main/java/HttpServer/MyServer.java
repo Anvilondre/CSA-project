@@ -239,7 +239,7 @@ public class MyServer {
                     }
                 }
             } else exchange.sendResponseHeaders(405, 0);
-
+                exchange.close();
         }).setAuthenticator(authenticator);
 
 

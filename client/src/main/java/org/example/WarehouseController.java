@@ -1,5 +1,7 @@
 package org.example;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -11,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.example.Entities.*;
 
+import static org.example.RequestsManagers.GetAllRequests.getAllCategories;
+import static org.example.RequestsManagers.GetAllRequests.getAllProductsByCategoryId;
 import static org.example.RequestsManagers.putRequests.putCategoryRequest;
 
 public class WarehouseController {
@@ -55,7 +59,28 @@ public class WarehouseController {
     public void initialize() {
         groupsUnitsVBox = new VBox();
         groupsScrollPane.setContent(groupsUnitsVBox);
+        UpdateUnitsBox();
     }
+
+    public void UpdateUnitsBox(){
+        try {
+            ArrayList<Category> categories = getAllCategories();
+            for (Category category : categories) {
+                ArrayList<Product> products = getAllProductsByCategoryId(category.getId());
+                ArrayList<ProductLabel> productLabels = new ArrayList<>();
+                for (Product product : products) {
+                    productLabels.add(new ProductLabel(product));
+                }
+                CategoryPane categoryPane = new CategoryPane(category, productLabels);
+                groupsUnitsVBox.getChildren().add(categoryPane);
+            }
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    };
 
     @FXML
     private void searchUnitByName() {
