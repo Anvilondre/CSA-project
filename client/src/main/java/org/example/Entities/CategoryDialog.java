@@ -61,7 +61,7 @@ public class CategoryDialog extends Dialog<Category> {
                     if (nameValue.isBlank())
                         throw new IllegalArgumentException("name can't be blank!");
 
-                    return new Category(name.getText(), description.getText());
+                    return new Category(category.getId(), name.getText(), description.getText());
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setContentText("Wrong parameters!\n(" + e.getMessage() + ")");
