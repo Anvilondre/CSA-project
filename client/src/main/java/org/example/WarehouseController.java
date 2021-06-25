@@ -11,6 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.example.Entities.*;
 
+import static org.example.RequestsManagers.putRequests.putCategoryRequest;
+
 public class WarehouseController {
 
     @FXML
@@ -31,7 +33,14 @@ public class WarehouseController {
         Optional<Category> results = dialog.showAndWait();
         results.ifPresent((Category result) -> {
             // TODO: Database callback
-            addCategoryPane(new CategoryPane(result));
+            int[] array  = putCategoryRequest(result);
+            if(array[0] == 201) {
+                result.setId(array[1]);
+                addCategoryPane(new CategoryPane(result));
+            } else{
+                // TODO: Add error;
+                System.out.println("ERROR");
+            }
         });
     }
 

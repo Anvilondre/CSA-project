@@ -10,6 +10,9 @@ import org.example.WarehouseController;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.example.RequestsManagers.putRequests.putCategoryRequest;
+import static org.example.RequestsManagers.putRequests.putProductRequest;
+
 public class CategoryPane extends TitledPane {
 
     private Category category;
@@ -59,7 +62,14 @@ public class CategoryPane extends TitledPane {
         System.out.println(getTotalCost());
         results.ifPresent((Product result) -> {
             // TODO: Database callback
-            this.addProductLabel(new CategoryProductLabel(result));
+            int[] array  = putProductRequest(result);
+            if(array[0] == 201) {
+                result.setId(array[1]);
+                this.addProductLabel(new CategoryProductLabel(result));
+            } else{
+                // TODO: Add error;
+                System.out.println("ERROR");
+            }
         });
         // ProductLabel productLabel = new ProductLabel(product);
 

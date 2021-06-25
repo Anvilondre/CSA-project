@@ -75,7 +75,7 @@ public class Database {
     public boolean isCategoryPresent(int id) {
         try {
             Statement st = con.createStatement();
-            ResultSet res = st.executeQuery("SELECT * FROM category where id = '" + id + "'");
+            ResultSet res = st.executeQuery("SELECT * FROM category where id = " + id + ";");
             if (res.next()) {
                 return true;
 
@@ -85,6 +85,22 @@ public class Database {
         }
         return false;
     }
+
+
+    public boolean isCategoryPresentByName(String name) {
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM category where name = '" + name + "';");
+            if (res.next()) {
+                return true;
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can`t find category", e);
+        }
+        return false;
+    }
+
 
     public Category insertCategory(Category category) {
         try {
@@ -163,6 +179,20 @@ public class Database {
         }
         return false;
     }
+
+    public boolean isProductPresentByName(String name) {
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM product where name = '" + name + "';");
+            if (res.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can`t find product", e);
+        }
+        return false;
+    }
+
 
     public Product insertProduct(Product product) {
         try {
@@ -321,4 +351,6 @@ public class Database {
             throw new RuntimeException("Problem with DELETE from product", e);
         }
     }
+
+
 }

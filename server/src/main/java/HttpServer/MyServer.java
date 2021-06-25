@@ -18,6 +18,7 @@ import io.jsonwebtoken.lang.Strings;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -68,7 +69,15 @@ public class MyServer {
         server.start();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+        objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_TRAILING_TOKENS, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNRESOLVED_OBJECT_IDS, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_MISSING_EXTERNAL_TYPE_ID_PROPERTY, false);
 
         server.createContext("/login", exchange -> {
             if (exchange.getRequestMethod().equals("POST")) {
@@ -159,19 +168,21 @@ public class MyServer {
 
         server.createContext("/api/good", exchange -> {
             if(exchange.getRequestMethod().equals("PUT")){
-                Product product = objectMapper.readValue(exchange.getRequestBody(), Product.class);
+                Product product = objectMapper.readValue(exchange.getRequestBody().readAllBytes(), Product.class);
+
                 if(product != null) {
-                    if(!product.isValid()){
+                    if(db.isProductPresentByName(product.getName()) || !product.isValid()){
                         exchange.sendResponseHeaders(409, 0);
                     } else {
                         product = db.insertProduct(product);
-                        byte[] response = ("Created with " + product.getId() + " of created good").getBytes(StandardCharsets.UTF_8);
+                        byte[] response = ByteBuffer.allocate(4).putInt(product.getId()).array();
+
                         exchange.sendResponseHeaders(201, response.length);
                         exchange.getResponseBody().write(response);
                     }
                 }
             } else exchange.sendResponseHeaders(405, 0);
-
+            exchange.close();
         }).setAuthenticator(authenticator);
 
 
@@ -218,11 +229,11 @@ public class MyServer {
             if(exchange.getRequestMethod().equals("PUT")){
                 Category category = objectMapper.readValue(exchange.getRequestBody(), Category.class);
                 if(category != null) {
-                    if(!category.isValid()){
+                    if(db.isCategoryPresentByName(category.getName()) ||!category.isValid()){
                         exchange.sendResponseHeaders(409, 0);
                     } else {
                         category = db.insertCategory(category);
-                        byte[] response = ("Created with " + category.getId() + " of created category").getBytes(StandardCharsets.UTF_8);
+                        byte[] response = ByteBuffer.allocate(4).putInt(category.getId()).array();;
                         exchange.sendResponseHeaders(201, response.length);
                         exchange.getResponseBody().write(response);
                     }
