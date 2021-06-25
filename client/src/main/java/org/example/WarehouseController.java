@@ -9,7 +9,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.util.Pair;
 import org.example.Entities.*;
 
 public class WarehouseController {

@@ -11,6 +11,7 @@ public class ProductLabel extends Button {
 
     public ProductLabel(Product product) {
         super();
+        ProductLabel.this.setStyle("-fx-background-color: #ffffff");
         this.setOnAction(new EventHandler<>() {
             @Override public void handle(ActionEvent e) {
                 ProductLabel.this.setStyle("-fx-background-color: #ffffff");
