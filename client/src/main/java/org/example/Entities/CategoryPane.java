@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.example.RequestsManagers.UpdateRequests.updateCategoryRequest;
+import static org.example.RequestsManagers.UpdateRequests.updateProductRequest;
 import static org.example.RequestsManagers.putRequests.putCategoryRequest;
 import static org.example.RequestsManagers.putRequests.putProductRequest;
 
@@ -231,6 +232,12 @@ public class CategoryPane extends TitledPane {
             System.out.println(getTotalCost());
             results.ifPresent((Product result) -> {
                 // TODO: Database callback
+                int code = updateProductRequest(result);
+                if(code == 204){
+                    this.setProduct(result);
+                } else{
+                    System.out.println("Error");
+                }
                 this.setProduct(result);
                 this.update();
                 CategoryPane.this.update();
