@@ -4,30 +4,34 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 import org.example.WarehouseController;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class CategoryPane extends TitledPane {
 
     private Category category;
     private final VBox productsVBox = new VBox();
-    private ArrayList<ProductLabel> productLabels = new ArrayList<>();
+    private ArrayList<CategoryProductLabel> productLabels = new ArrayList<>();
 
     public CategoryPane(Category category) {
         super();
         this.category = category;
+        this.setContent(this.productsVBox);
         this.update();
         this.addContextMenu();
     }
 
-    public CategoryPane(Category cat, ArrayList<ProductLabel> productLabels) {
+    public CategoryPane(Category category, ArrayList<ProductLabel> productLabels) {
         super();
-        this.category = cat;
+        this.category = category;
 
         for (ProductLabel productLabel : productLabels) {
-            this.productLabels.add(productLabel);
-            this.productsVBox.getChildren().add(new CategoryProductLabel(productLabel));
+            CategoryProductLabel categoryProductLabel = new CategoryProductLabel(productLabel);
+            this.productLabels.add(categoryProductLabel);
+            this.productsVBox.getChildren().add(categoryProductLabel);
             productLabel.toFront();
         }
 
@@ -36,9 +40,27 @@ public class CategoryPane extends TitledPane {
         this.addContextMenu();
     }
 
+    public void seekSubName(String subName) {
+        for (CategoryProductLabel productLabel : productLabels) {
+            if (productLabel.getProduct().getName().contains(subName)
+            && !subName.isBlank()) {
+                this.setExpanded(true);
+                productLabel.setStyle("-fx-background-color: #ff0000");
+            } else {
+                this.setExpanded(false);
+                productLabel.setStyle("-fx-background-color: #ffffff");
+            }
+        }
+    }
 
     private void addProduct() {
-
+        ProductDialog dialog = new ProductDialog(category.getId());
+        Optional<Product> results = dialog.showAndWait();
+        System.out.println(getTotalCost());
+        results.ifPresent((Product result) -> {
+            // TODO: Database callback
+            this.addProductLabel(new CategoryProductLabel(result));
+        });
         // ProductLabel productLabel = new ProductLabel(product);
 
         // TODO: Database callback
@@ -46,9 +68,13 @@ public class CategoryPane extends TitledPane {
     }
 
     private void editCategory() {
-
-        // TODO: Database callback
-        // setCategory(category);
+        CategoryDialog dialog = new CategoryDialog(category);
+        Optional<Category> results = dialog.showAndWait();
+        results.ifPresent((Category result) -> {
+            // TODO: Database callback
+            this.setCategory(result);
+            System.out.println("Got result!");
+        });
     }
 
     private void removeCategory() {
@@ -94,7 +120,7 @@ public class CategoryPane extends TitledPane {
 
     private void updateName() {
         this.setText(String.format("%s [%d units, %.2f$ total]",
-                getCategory().getName(), getTotalAmount(), getTotalCost()));
+                category.getName(), getTotalAmount(), getTotalCost()));
     }
 
     private void updateDescriptionTip() {
@@ -124,14 +150,16 @@ public class CategoryPane extends TitledPane {
         this.update();
     }
 
-    public void addProductLabel(ProductLabel productLabel) {
-        productsVBox.getChildren().add(productLabel);
-        productLabels.add(productLabel);
+    public void addProductLabel(CategoryProductLabel categoryProductLabel) {
+        productsVBox.getChildren().add(categoryProductLabel);
+        productLabels.add(categoryProductLabel);
+        this.update();
     }
 
-    public void removeProductLabel(ProductLabel productLabel) {
-        productsVBox.getChildren().remove(productLabel);
-        productLabels.add(productLabel);
+    public void removeProductLabel(CategoryProductLabel categoryProductLabel) {
+        productsVBox.getChildren().remove(categoryProductLabel);
+        productLabels.remove(categoryProductLabel);
+        this.update();
     }
 
     public ArrayList<Product> getProducts() {
@@ -157,21 +185,47 @@ public class CategoryPane extends TitledPane {
 
 
         private void addAmount() {
-            // TODO: Database callback
+            AddSubtractAmount dialog = new AddSubtractAmount(true);
+            Optional<Double> results = dialog.showAndWait();
+            results.ifPresent((Double result) -> {
+                // TODO: Database callback
+                this.addAmount(result);
+                this.update();
+                CategoryPane.this.update();
+            });
         }
 
         private void reduceAmount() {
-            // TODO: Database callback
+            AddSubtractAmount dialog = new AddSubtractAmount(false);
+            Optional<Double> results = dialog.showAndWait();
+            results.ifPresent((Double result) -> {
+                // TODO: Database callback
+                this.addAmount(-result);
+                this.update();
+                CategoryPane.this.update();
+            });
         }
 
         private void editProduct() {
-            // TODO: Database callback
+            ProductDialog dialog = new ProductDialog(category.getId(), getProduct());
+            Optional<Product> results = dialog.showAndWait();
+            System.out.println(getTotalCost());
+            results.ifPresent((Product result) -> {
+                // TODO: Database callback
+                this.setProduct(result);
+                this.update();
+                CategoryPane.this.update();
+            });
+            System.out.println(getTotalCost());
         }
 
         private void removeProduct() {
-
             // TODO: Database callback
+            System.out.println(productLabels.size());
+            System.out.println(getTotalCost());
             removeProductLabel(this);
+            System.out.println(getTotalCost());
+            System.out.println(productLabels.size());
         }
 
         private void addContextMenu() {

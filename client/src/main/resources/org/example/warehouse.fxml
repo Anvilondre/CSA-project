@@ -10,13 +10,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="507.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.WarehouseController">
    <children>
-      <Button fx:id="addGroupButton" layoutX="327.0" layoutY="450.0" mnemonicParsing="false" onAction="#addGroupButton" text="Add group" />
-      <Text layoutX="77.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="General statistics" />
-      <TextField fx:id="searchUnitField" layoutX="44.0" layoutY="92.0" />
-      <TextArea fx:id="generalStatisticsText" disable="true" layoutX="23.0" layoutY="174.0" prefHeight="90.0" prefWidth="202.0" />
-      <Text layoutX="61.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current group statistics" />
-      <TextArea fx:id="currentGroupStatisticsText" disable="true" layoutX="23.0" layoutY="312.0" prefHeight="90.0" prefWidth="202.0" />
-      <Button fx:id="searchUnitButton" layoutX="60.0" layoutY="55.0" mnemonicParsing="false" onAction="#searchUnitByName" text="Search by unit name" />
+      <Button fx:id="addCategoryButton" layoutX="327.0" layoutY="450.0" mnemonicParsing="false" onAction="#addCategory" text="Add category" />
+      <Text layoutX="77.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="General statistics" />
+      <TextField fx:id="searchUnitTextField" layoutX="44.0" layoutY="161.0" />
+      <TextArea fx:id="generalStatisticsText" disable="true" layoutX="23.0" layoutY="265.0" prefHeight="114.0" prefWidth="202.0" />
+      <Button fx:id="searchUnitButton" layoutX="60.0" layoutY="124.0" mnemonicParsing="false" onAction="#searchUnitByName" text="Search by unit name" />
       <ScrollPane fx:id="groupsScrollPane" fitToWidth="true" layoutX="246.0" layoutY="19.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="237.0">
          <content>
             <VBox />
