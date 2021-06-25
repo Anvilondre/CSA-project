@@ -45,16 +45,16 @@ public class CategoryPane extends TitledPane {
     }
 
     public void seekSubName(String subName) {
+        boolean found = false;
         for (CategoryProductLabel productLabel : productLabels) {
             if (productLabel.getProduct().getName().contains(subName)
             && !subName.isBlank()) {
-                this.setExpanded(true);
                 productLabel.setStyle("-fx-background-color: #ff0000");
-            } else {
-                this.setExpanded(false);
+                found = true;
+            } else
                 productLabel.setStyle("-fx-background-color: #ffffff");
-            }
         }
+        setExpanded(found);
     }
 
     private void addProduct() {

@@ -6,12 +6,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="507.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.WarehouseController">
    <children>
       <Button fx:id="addCategoryButton" layoutX="327.0" layoutY="450.0" mnemonicParsing="false" onAction="#addCategory" text="Add category" />
-      <Text layoutX="77.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="General statistics" />
       <TextField fx:id="searchUnitTextField" layoutX="44.0" layoutY="161.0" />
       <TextArea fx:id="generalStatisticsText" disable="true" layoutX="23.0" layoutY="265.0" prefHeight="114.0" prefWidth="202.0" />
       <Button fx:id="searchUnitButton" layoutX="60.0" layoutY="124.0" mnemonicParsing="false" onAction="#searchUnitByName" text="Search by unit name" />
@@ -20,5 +18,6 @@
             <VBox />
          </content>
       </ScrollPane>
+      <Button layoutX="69.0" layoutY="240.0" mnemonicParsing="false" onAction="#updateGeneralInfo" text="General statistics" />
    </children>
 </AnchorPane>
