@@ -82,7 +82,7 @@ public class ProductDialog extends Dialog<Product> {
                     if (nameValue.isBlank() || priceValue <= 0 || amountValue < 0)
                         throw new IllegalArgumentException("Illegal value in name/price/amount");
 
-                    return new Product(nameValue, description.getText(),
+                    return new Product(product.getId(), nameValue, description.getText(),
                             producer.getText(), Double.parseDouble(amount.getText()),
                             Double.parseDouble(price.getText()), categoryId);
 
