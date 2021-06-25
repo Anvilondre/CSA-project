@@ -1,5 +1,6 @@
 package org.example.Entities;
 
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -28,13 +29,26 @@ public class ProductDialog extends Dialog<Product> {
 
         this.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
-                return new Product(name.getText(), description.getText(),
-                        producer.getText(), Double.parseDouble(amount.getText()),
-                        Double.parseDouble(price.getText()), categoryId);
+                try {
+                    Double priceValue = Double.parseDouble(price.getText());
+                    Double amountValue = Double.parseDouble(amount.getText());
+                    String nameValue = name.getText();
+
+                    if (nameValue.isBlank() || priceValue <= 0 || amountValue < 0)
+                        throw new IllegalArgumentException("Illegal value in name/price/amount");
+
+                    return new Product(nameValue, description.getText(),
+                            producer.getText(), Double.parseDouble(amount.getText()),
+                            Double.parseDouble(price.getText()), categoryId);
+
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Wrong parameters!\n(" + e.getMessage() + ")");
+                    alert.showAndWait();
+                }
             }
             return null;
         });
-
     }
 
     // For edits
@@ -60,9 +74,23 @@ public class ProductDialog extends Dialog<Product> {
 
         this.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.APPLY) {
-                return new Product(name.getText(), description.getText(),
-                        producer.getText(), Double.parseDouble(amount.getText()),
-                        Double.parseDouble(price.getText()), categoryId);
+                try {
+                    Double priceValue = Double.parseDouble(price.getText());
+                    Double amountValue = Double.parseDouble(amount.getText());
+                    String nameValue = name.getText();
+
+                    if (nameValue.isBlank() || priceValue <= 0 || amountValue < 0)
+                        throw new IllegalArgumentException("Illegal value in name/price/amount");
+
+                    return new Product(nameValue, description.getText(),
+                            producer.getText(), Double.parseDouble(amount.getText()),
+                            Double.parseDouble(price.getText()), categoryId);
+
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Wrong parameters!\n(" + e.getMessage() + ")");
+                    alert.showAndWait();
+                }
             }
             return null;
         });

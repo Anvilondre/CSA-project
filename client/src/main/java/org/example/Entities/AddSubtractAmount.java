@@ -25,7 +25,13 @@ public class AddSubtractAmount extends Dialog<Double> {
 
         this.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.APPLY) {
-                return Double.parseDouble(amount.getText());
+                try {
+                    return Double.parseDouble(amount.getText());
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Wrong parameters!\n(" + e.getMessage() + ")");
+                    alert.showAndWait();
+                }
             }
             return null;
         });

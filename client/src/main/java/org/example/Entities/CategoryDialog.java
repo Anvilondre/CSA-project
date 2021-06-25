@@ -21,10 +21,22 @@ public class CategoryDialog extends Dialog<Category> {
 
         this.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
-                return new Category(name.getText(), description.getText());
+                try {
+                    String nameValue = name.getText();
+
+                    if (nameValue.isBlank())
+                        throw new IllegalArgumentException("name can't be blank!");
+
+                    return new Category(name.getText(), description.getText());
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Wrong parameters!\n(" + e.getMessage() + ")");
+                    alert.showAndWait();
+                }
             }
             return null;
-        });    }
+        });
+    }
 
     // For edits
     public CategoryDialog (Category category) {
@@ -43,7 +55,18 @@ public class CategoryDialog extends Dialog<Category> {
 
         this.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.APPLY) {
-                return new Category(name.getText(), description.getText());
+                try {
+                    String nameValue = name.getText();
+
+                    if (nameValue.isBlank())
+                        throw new IllegalArgumentException("name can't be blank!");
+
+                    return new Category(name.getText(), description.getText());
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Wrong parameters!\n(" + e.getMessage() + ")");
+                    alert.showAndWait();
+                }
             }
             return null;
         });
