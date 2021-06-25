@@ -4,7 +4,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 public class AddSubtractAmount extends Dialog<Double> {
-    public AddSubtractAmount(boolean add) {
+    public AddSubtractAmount(boolean add, Double currentAmount) {
         super();
         Label addLabel;
         if (add) {
@@ -26,6 +26,9 @@ public class AddSubtractAmount extends Dialog<Double> {
         this.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.APPLY) {
                 try {
+                    Double amountValue = Double.parseDouble(amount.getText());
+                    if ((add ? amountValue : -amountValue) + currentAmount < 0)
+                        throw new IllegalArgumentException("amount can't be negative");
                     return Double.parseDouble(amount.getText());
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);

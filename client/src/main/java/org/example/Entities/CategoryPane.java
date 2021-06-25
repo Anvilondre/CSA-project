@@ -211,7 +211,7 @@ public class CategoryPane extends TitledPane {
 
 
         private void addAmount() {
-            AddSubtractAmount dialog = new AddSubtractAmount(true);
+            AddSubtractAmount dialog = new AddSubtractAmount(true, this.getProduct().getAmount());
             Optional<Double> results = dialog.showAndWait();
             results.ifPresent((Double result) -> {
                 // TODO: Database callback
@@ -229,7 +229,7 @@ public class CategoryPane extends TitledPane {
         }
 
         private void reduceAmount() {
-            AddSubtractAmount dialog = new AddSubtractAmount(false);
+            AddSubtractAmount dialog = new AddSubtractAmount(false, this.getProduct().getAmount());
             Optional<Double> results = dialog.showAndWait();
             results.ifPresent((Double result) -> {
                 // TODO: Database callback
