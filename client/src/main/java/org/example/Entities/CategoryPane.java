@@ -2,11 +2,7 @@ package org.example.Entities;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.example.WarehouseController;
 
@@ -26,13 +22,14 @@ public class CategoryPane extends TitledPane {
         this.addContextMenu();
     }
 
-    public CategoryPane(Category category, ArrayList<ProductLabel> productLabels) {
+    public CategoryPane(Category cat, ArrayList<ProductLabel> productLabels) {
         super();
-        this.category = category;
-        this.productLabels = productLabels;
+        this.category = cat;
 
-        for (ProductLabel productLabel : this.productLabels)
-            this.productsVBox.getChildren().add(productLabel);
+        for (ProductLabel productLabel : productLabels) {
+            this.productsVBox.getChildren().add(new CategoryProductLabel(productLabel));
+            productLabel.toFront();
+        }
 
         this.setText(category.getName());
         this.setContent(this.productsVBox);
@@ -40,31 +37,29 @@ public class CategoryPane extends TitledPane {
         this.addContextMenu();
     }
 
-    private void updateDescriptionTip() {
-        this.setTooltip(new Tooltip(this.category.getDescription()));
-    }
 
-    public void addProduct(Product product) {
-        ProductLabel productLabel = new ProductLabel(product);
+    private void addProduct() {
+
+        // ProductLabel productLabel = new ProductLabel(product);
 
         // TODO: Database callback
-        addProductLabel(productLabel);
+        // addProductLabel(productLabel);
     }
 
-    public void removeProduct(Product product) {
-        ProductLabel productLabel = new ProductLabel(product);
+    private void editCategory() {
 
         // TODO: Database callback
-        removeProductLabel(productLabel);
+        // setCategory(category);
     }
 
-    public void editCategory(Category category) {
+    private void removeCategory() {
+
         // TODO: Database callback
-        setCategory(category);
+        WarehouseController.removeCategoryPane(this);
     }
 
     private void addContextMenu() {
-        final ContextMenu menu = new ContextMenu();
+        ContextMenu menu = new ContextMenu();
         MenuItem add = new MenuItem("Add product");
         MenuItem edit = new MenuItem("Edit category");
         MenuItem remove = new MenuItem("Remove category");
@@ -73,26 +68,37 @@ public class CategoryPane extends TitledPane {
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("ADD");
+                CategoryPane.this.addProduct();
             }
         });
 
         edit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("EDIT");
+                CategoryPane.this.editCategory();
             }
         });
 
         remove.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("REMOVE");
-                WarehouseController.removeCategoryPane(CategoryPane.this);
+                CategoryPane.this.removeCategory();
             }
         });
-
         this.setContextMenu(menu);
+    }
+
+    private void update() {
+        updateName();
+        updateDescriptionTip();
+    }
+
+    private void updateName() {
+        this.setText(category.getName());
+    }
+
+    private void updateDescriptionTip() {
+        this.setTooltip(new Tooltip("Description: " + category.getDescription()));
     }
 
     public Category getCategory() {
@@ -101,7 +107,7 @@ public class CategoryPane extends TitledPane {
 
     public void setCategory(Category category) {
         this.category = category;
-        this.updateDescriptionTip();
+        this.update();
     }
 
     public void addProductLabel(ProductLabel productLabel) {
@@ -119,5 +125,78 @@ public class CategoryPane extends TitledPane {
         for (ProductLabel productLabel : this.productLabels)
             res.add(productLabel.getProduct());
         return res;
+    }
+
+    /** Class for units inside category list **/
+
+    public class CategoryProductLabel extends ProductLabel {
+
+        public CategoryProductLabel(Product product) {
+            super(product);
+            addContextMenu();
+        }
+
+        public CategoryProductLabel(ProductLabel productLabel) {
+            super(productLabel.getProduct());
+            addContextMenu();
+        }
+
+
+        private void addAmount() {
+            // TODO: Database callback
+        }
+
+        private void reduceAmount() {
+            // TODO: Database callback
+        }
+
+        private void editProduct() {
+            // TODO: Database callback
+        }
+
+        private void removeProduct() {
+
+            // TODO: Database callback
+            removeProductLabel(this);
+        }
+
+        private void addContextMenu() {
+            ContextMenu menu = new ContextMenu();
+            MenuItem add = new MenuItem("Add amount");
+            MenuItem reduce = new MenuItem("Reduce amount");
+            MenuItem edit = new MenuItem("Edit product");
+            MenuItem remove = new MenuItem("Remove product");
+            menu.getItems().addAll(add, reduce, edit, remove);
+
+            add.setOnAction(new EventHandler<>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    CategoryProductLabel.this.addAmount();
+                }
+            });
+
+            reduce.setOnAction(new EventHandler<>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    CategoryProductLabel.this.reduceAmount();
+                }
+            });
+
+            edit.setOnAction(new EventHandler<>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    CategoryProductLabel.this.editProduct();
+                }
+            });
+
+            remove.setOnAction(new EventHandler<>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    CategoryProductLabel.this.removeProduct();
+                }
+            });
+            this.setContextMenu(menu);
+        }
+
     }
 }
