@@ -147,14 +147,14 @@ public class CategoryPane extends TitledPane {
         this.setTooltip(new Tooltip("Description: " + category.getDescription()));
     }
 
-    private Double getTotalCost() {
+    public Double getTotalCost() {
         Double totalCost = 0d;
         for (Product product : getProducts())
             totalCost += product.getAmount() * product.getPrice();
         return totalCost;
     }
 
-    private int getTotalAmount() {
+    public int getTotalAmount() {
         int totalAmount = 0;
         for (Product product : getProducts())
             totalAmount += product.getAmount();
