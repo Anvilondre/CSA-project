@@ -28,6 +28,14 @@ public class Product {
         this.category_id = category_id;
     }
 
+    public Product(String name, String description, String producer, Double amount, Double price) {
+        this.name = name;
+        this.description = description;
+        this.producer = producer;
+        this.amount = amount;
+        this.price = price;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -82,6 +90,11 @@ public class Product {
 
     public void setCategory_id(Integer category_id) {
         this.category_id = category_id;
+    }
+
+    public boolean isValid(){
+        return name != null && description != null && producer != null
+                && amount != null && price != null && category_id != null && price > 0 && amount > 0 && category_id > 0;
     }
 
     @Override

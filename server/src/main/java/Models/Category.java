@@ -43,6 +43,9 @@ public class Category {
         this.description = description;
     }
 
+    public boolean isValid(){
+        return name != null && description!=null;
+    }
     @Override
     public String toString() {
         return "Category{" +

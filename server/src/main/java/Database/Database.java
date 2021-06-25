@@ -30,12 +30,12 @@ public class Database {
             pst = con.prepareStatement("create table if not exists 'product' (" +
                     "'id' INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "'name' text UNIQUE," +
-                    "'description' text" +
-                    "'producer' text" +
+                    "'description' text," +
+                    "'producer' text," +
                     "'price' double," +
                     "'amount' double," +
                     "'category_id' Integer," +
-                    "FOREIGN KEY(category_id) REFERENCES category(id)" +
+                    "FOREIGN KEY(category_id) REFERENCES category(id) ON UPDATE CASCADE ON DELETE CASCADE " +
                     ");"
             );
             pst.executeUpdate();
@@ -58,10 +58,24 @@ public class Database {
     }
 
     // Category
-    public boolean isCategoryPresent(String name) {
+    public Category GetCategoryById(int id) {
         try {
             Statement st = con.createStatement();
-            ResultSet res = st.executeQuery("SELECT * FROM category where name = '" + name + "'");
+            ResultSet res = st.executeQuery("SELECT * FROM category WHERE id = " + id + ";");
+
+            if (res.next()) {
+                return getCategoryFromResultSet(res);
+            } else return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problems with SQL query for select category by id", e);
+        }
+    }
+    
+    public boolean isCategoryPresent(int id) {
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM category where id = '" + id + "'");
             if (res.next()) {
                 return true;
 
@@ -90,6 +104,20 @@ public class Database {
         }
     }
 
+    public void updateCategory(Category category){
+        try{
+            Statement st = con.createStatement();
+            st.executeUpdate("UPDATE category" +
+                    " SET name = '" + category.getName() + "', " +
+                    "description = '" + category.getDescription()  +
+                    "' WHERE id = " + category.getId()  +
+                    ";");
+        }catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("Problem with UPDATE category", e);
+        }
+    }    
+    
     public List<Category> getAllCategories() {
         try {
             Statement st = con.createStatement();
@@ -112,10 +140,10 @@ public class Database {
                 res.getString("description"));
     }
 
-    public void deleteCategory(String name) {
+    public void deleteCategory(int id) {
         try {
             Statement st = con.createStatement();
-            st.executeUpdate("DELETE FROM category WHERE name = '" + name + "';");
+            st.executeUpdate("DELETE FROM category WHERE id = " + id + ";");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Problem with DELETE from category", e);
@@ -123,13 +151,12 @@ public class Database {
     }
 
     // Product
-    public boolean isProductPresent(String name) {
+    public boolean isProductPresent(int id) {
         try {
             Statement st = con.createStatement();
-            ResultSet res = st.executeQuery("SELECT * FROM categories where name = '" + name + "'");
+            ResultSet res = st.executeQuery("SELECT * FROM product where id = " + id + ";");
             if (res.next()) {
                 return true;
-
             }
         } catch (SQLException e) {
             throw new RuntimeException("Can`t find product", e);
@@ -156,6 +183,20 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Problem with insert product", e);
+        }
+    }
+
+    public Product GetProductById(int id){
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery("SELECT * FROM product WHERE id = " + id + ";");
+
+            if(res.next()){
+                return getProductFromResultSet(res);
+            } else return null;
+        } catch (SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("Problems with SQL query for select product by id", e);
         }
     }
 
@@ -195,18 +236,18 @@ public class Database {
                     "price = " + product.getPrice() + "," +
                     "amount = " + product.getAmount() + "," +
                     "category_id = " + product.getCategory_id() + " " +
-                    "WHERE id = " +
-                    "");
+                    "WHERE id = " + product.getId() +
+                    ";");
         }catch (SQLException e){
             e.printStackTrace();
             throw new RuntimeException("Problem with UPDATE product", e);
         }
     }
 
-    public void deleteProduct(String name) {
+    public void deleteProduct(int id) {
         try {
             Statement st = con.createStatement();
-            st.executeUpdate("DELETE FROM product WHERE name = '" + name + "';");
+            st.executeUpdate("DELETE FROM product WHERE id = " + id + ";");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Problem with DELETE from product", e);
