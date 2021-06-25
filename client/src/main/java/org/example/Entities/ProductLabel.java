@@ -28,10 +28,10 @@ public class ProductLabel extends Button {
 
     private void updateDescriptionTip() {
         this.setTooltip(new Tooltip("Description: " + product.getDescription() +
-                                     "\nProducer" + getProduct().getProducer()));
+                                     "\nProducer: " + product.getProducer()));
     }
 
     private void updateText() {
-        this.setText(product.getName() + '[' + product.getAmount() + "pcs, " + product.getPrice() + "$]");
+        this.setText(product.getName() + " [" + product.getAmount() + "pcs, " + product.getPrice() + "$]");
     }
 }

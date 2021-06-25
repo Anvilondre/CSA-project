@@ -17,8 +17,7 @@ public class CategoryPane extends TitledPane {
     public CategoryPane(Category category) {
         super();
         this.category = category;
-        this.setText(category.getName());
-        this.updateDescriptionTip();
+        this.update();
         this.addContextMenu();
     }
 
@@ -27,13 +26,13 @@ public class CategoryPane extends TitledPane {
         this.category = cat;
 
         for (ProductLabel productLabel : productLabels) {
+            this.productLabels.add(productLabel);
             this.productsVBox.getChildren().add(new CategoryProductLabel(productLabel));
             productLabel.toFront();
         }
 
-        this.setText(category.getName());
         this.setContent(this.productsVBox);
-        this.updateDescriptionTip();
+        this.update();
         this.addContextMenu();
     }
 
@@ -65,21 +64,21 @@ public class CategoryPane extends TitledPane {
         MenuItem remove = new MenuItem("Remove category");
         menu.getItems().addAll(add, edit, remove);
 
-        add.setOnAction(new EventHandler<ActionEvent>() {
+        add.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 CategoryPane.this.addProduct();
             }
         });
 
-        edit.setOnAction(new EventHandler<ActionEvent>() {
+        edit.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 CategoryPane.this.editCategory();
             }
         });
 
-        remove.setOnAction(new EventHandler<ActionEvent>() {
+        remove.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 CategoryPane.this.removeCategory();
@@ -94,11 +93,26 @@ public class CategoryPane extends TitledPane {
     }
 
     private void updateName() {
-        this.setText(category.getName());
+        this.setText(String.format("%s [%d units, %.2f$ total]",
+                getCategory().getName(), getTotalAmount(), getTotalCost()));
     }
 
     private void updateDescriptionTip() {
         this.setTooltip(new Tooltip("Description: " + category.getDescription()));
+    }
+
+    private Double getTotalCost() {
+        Double totalCost = 0d;
+        for (Product product : getProducts())
+            totalCost += product.getAmount() * product.getPrice();
+        return totalCost;
+    }
+
+    private int getTotalAmount() {
+        int totalAmount = 0;
+        for (Product product : getProducts())
+            totalAmount += product.getAmount();
+        return totalAmount;
     }
 
     public Category getCategory() {
